@@ -1,19 +1,20 @@
 version: '3.8'
 
 services:
-  localstack:
-    image: localstack/localstack:4.2.0
-    container_name: localstack
+  floci:
+    # Drop-in replacement for LocalStack (https://github.com/floci-io/floci).
+    # The "-compat" variant bundles the AWS CLI so scripts/init.sh can seed queues and buckets.
+    image: floci/floci:latest-compat
+    container_name: floci
     ports:
       - "4566:4566"
     environment:
-      - SERVICES=sqs,s3
-      - DEBUG=1
-      - DATA_DIR=/var/lib/localstack/data
+      # keep queues/buckets across restarts (in-memory + async flush to disk every 5s)
+      - FLOCI_STORAGE_MODE=hybrid
     volumes:
-      - ./localstack-data:/var/lib/localstack/data
+      # named volume: the image owns /app/data as uid 1001, a bind mount would be root-owned
+      - floci-data:/app/data
       - ./scripts:/etc/localstack/init/ready.d
-      - /var/run/docker.sock:/var/run/docker.sock
 
   postgres:
     image: postgres:17
@@ -34,3 +35,6 @@ services:
       - ollama
     ports:
       - "11434:11434"
+
+volumes:
+  floci-data:
