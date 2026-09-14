@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 |---|---|
 | `timeless-api/` | Java 21 / Quarkus 3 backend + Angular 19 frontend (served via Quinoa) |
 | `whatsapp/` | Node.js service that bridges WhatsApp messages to the API via SQS |
-| `docker/` | Local-dev docker-compose (LocalStack SQS/S3, PostgreSQL, Ollama) |
+| `docker/` | Local-dev docker-compose (floci for SQS/S3, PostgreSQL, Ollama) |
 | `infrastructure/` | Terraform / AWS provisioning |
 | `site/` | Landing page |
 
@@ -52,7 +52,7 @@ npm run prettier:write   # format check + apply
 ### Local infrastructure
 
 ```bash
-cd docker && docker-compose up -d   # starts LocalStack + PostgreSQL (Ollama excluded by default)
+cd docker && docker-compose up -d   # starts floci (LocalStack replacement) + PostgreSQL (Ollama excluded by default)
 
 # Include the local Ollama container (opt-in via the "ollama" compose profile)
 cd docker && docker-compose --profile ollama up -d
@@ -119,7 +119,7 @@ All Java code lives under `dev.matheuscruz` with three layers:
 | Profile | Activated by | Key behavior |
 |---|---|---|
 | `dev` (default) | `quarkus:dev` | Uses OpenAI, requires `OPENAI_API_KEY` in `application.properties` |
-| `local` | `-Dquarkus.profile=local` | Uses Ollama at `localhost:11434`, uses LocalStack for SQS |
+| `local` | `-Dquarkus.profile=local` | Uses Ollama at `localhost:11434`, uses floci (local AWS emulator) for SQS |
 | `test` | `@QuarkusTest` | Disables SQS devservices, disables OpenAI integration, disables scheduler |
 
 Maven profiles `openai` (active by default) and `ollama` control which LangChain4j dependency is included. Use `-Pollama` to switch.

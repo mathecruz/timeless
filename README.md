@@ -54,7 +54,7 @@ We love community contributions! Whether you're fixing a bug or adding a feature
 
 If you want to use Terraform and AWS see [this tutorial](RUNNING_TERRAFORM_AWS.md).
 
-## Running locally with localstack
+## Running locally with floci (local AWS emulator)
 
 > [!WARNING]
 > Actually, you will need two phones and a OpenAI token. Feel free to change the code to support only one number and a local LLM.
@@ -69,7 +69,8 @@ If you want to use Terraform and AWS see [this tutorial](RUNNING_TERRAFORM_AWS.m
 docker-compose up -d
 ```
 
-This starts LocalStack and PostgreSQL only. The Ollama container is now opt-in
+This starts [floci](https://github.com/floci-io/floci) (a free, open-source LocalStack
+replacement that emulates SQS and S3 on port 4566) and PostgreSQL only. The Ollama container is now opt-in
 via the `ollama` Compose profile — include it only if you plan to run the API
 against a local LLM without Quarkus Dev Services:
 
